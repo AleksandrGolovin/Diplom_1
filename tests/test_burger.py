@@ -1,7 +1,6 @@
-from praktikum.burger import Burger
 from praktikum.bun import Bun
 from praktikum.ingredient import Ingredient
-from data import BUN_CORRECT, INGREDIENT_SAUCE_CORRECT, INGREDIENT_FILLING_CORRECT
+from data import BUN_CORRECT, INGREDIENT_SAUCE_CORRECT
 
 
 class TestBurger:
@@ -15,85 +14,59 @@ class TestBurger:
     - Поведение при разных комбинациях данных
     """
 
-    def test_set_buns_correct_data_bun_set_successfully(self):
+    def test_set_buns_correct_data_bun_set_successfully(self, burger_empty):
         """
         Проверяет, что метод set_buns() корректно устанавливает булочку для бургера
         """
         bun = Bun(*BUN_CORRECT)
-        burger = Burger()
 
-        burger.set_buns(bun)
+        burger_empty.set_buns(bun)
 
-        assert burger.bun and burger.bun.name == bun.name and burger.bun.price == bun.price
+        assert burger_empty.bun and burger_empty.bun.name == bun.name and burger_empty.bun.price == bun.price
 
-    def test_add_ingredient_correct_data_ingredient_added(self):
+    def test_add_ingredient_correct_data_ingredient_added(self, burger_empty):
         """
         Проверяет, что метод add_ingredient() добавляет ингредиент в список ингредиентов бургера
         """
         ingredient = Ingredient(*INGREDIENT_SAUCE_CORRECT)
-        burger = Burger()
         
-        burger.add_ingredient(ingredient)
-        ingredients = burger.ingredients
+        burger_empty.add_ingredient(ingredient)
+        ingredients = burger_empty.ingredients
 
         assert len(ingredients) == 1 and ingredients[0].name == ingredient.name and ingredients[0].type == ingredient.type and ingredients[0].price == ingredient.price
 
-    def test_remove_ingredient_correct_data_ingredient_removed(self):
+    def test_remove_ingredient_correct_data_ingredient_removed(self, burger_full):
         """
         Проверяет, что метод remove_ingredient() удаляет ингредиент из списка ингредиентов по индексу
         """
-        ingredient = Ingredient(*INGREDIENT_SAUCE_CORRECT)
-        burger = Burger()
-        burger.ingredients.append(ingredient)
-        
-        burger.remove_ingredient(0)
-        ingredients = burger.ingredients
+        burger_full.remove_ingredient(0)
 
-        assert len(ingredients) == 0
+        assert len(burger_full.ingredients) == 1
 
-    def test_move_ingredient_correct_data_ingredient_moved(self):
+    def test_move_ingredient_correct_data_ingredient_moved(self, burger_full):
         """
         Проверяет, что метод move_ingredient() перемещает ингредиент на новую позицию в списке
         """
-        burger = Burger()
-        ingredient_0 = Ingredient(*INGREDIENT_SAUCE_CORRECT)
-        ingredient_1 = Ingredient(*INGREDIENT_FILLING_CORRECT)
-        burger.ingredients.append(ingredient_0)
-        burger.ingredients.append(ingredient_1)
+        ingredient_0 = burger_full.ingredients[0]
 
-        burger.move_ingredient(0, 1)
+        burger_full.move_ingredient(0, 1)
 
-        assert burger.ingredients[1].type == ingredient_0.type
+        assert burger_full.ingredients[1].type == ingredient_0.type
     
-    def test_get_price_correct_data_return_correct_sum(self):
+    def test_get_price_correct_data_return_correct_sum(self, burger_full):
         """
         Проверяет, что метод get_price() возвращает корректную сумму цен булочки (учтённой дважды) и всех ингредиентов
         """
-        burger = Burger()
-        bun = Bun(*BUN_CORRECT)
-        burger.bun = bun
-        ingredient_0 = Ingredient(*INGREDIENT_SAUCE_CORRECT)
-        ingredient_1 = Ingredient(*INGREDIENT_FILLING_CORRECT)
-        burger.ingredients.append(ingredient_0)
-        burger.ingredients.append(ingredient_1)
-        manual_price = bun.price * 2 + ingredient_0.price + ingredient_1.price
+        manual_price = burger_full.bun.price * 2 + burger_full.ingredients[0].price + burger_full.ingredients[1].price
 
-        price = burger.get_price()
+        price = burger_full.get_price()
 
         assert price == manual_price
 
-    def test_get_receipt_correct_data_return_valid_receipt_lines_count(self):
+    def test_get_receipt_correct_data_return_valid_receipt_lines_count(self, burger_full):
         """
         Проверяет, что метод get_receipt() возвращает чек с ожидаемым количеством строк
         """
-        burger = Burger()
-        bun = Bun(*BUN_CORRECT)
-        burger.bun = bun   # 2 строки
-        ingredient_0 = Ingredient(*INGREDIENT_SAUCE_CORRECT)
-        ingredient_1 = Ingredient(*INGREDIENT_FILLING_CORRECT)
-        burger.ingredients.append(ingredient_0)  # 1 строка
-        burger.ingredients.append(ingredient_1)  # 1 строка
-
-        receipt = burger.get_receipt()  # +2 строки на price с отступом
+        receipt = burger_full.get_receipt()  # 2 булки, 2 ингридиента, 2 строки на price с отступом
 
         assert len(receipt.split('\n')) == 6
