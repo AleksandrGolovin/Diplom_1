@@ -53,20 +53,20 @@ class TestBurger:
 
         assert burger_full.ingredients[1].type == ingredient_0.type
     
-    def test_get_price_correct_data_return_correct_sum(self, burger_full):
+    def test_get_price_correct_data_return_correct_sum(self, mocked_burger_full):
         """
         Проверяет, что метод get_price() возвращает корректную сумму цен булочки (учтённой дважды) и всех ингредиентов
         """
-        manual_price = burger_full.bun.price * 2 + burger_full.ingredients[0].price + burger_full.ingredients[1].price
+        manual_price = mocked_burger_full.bun.price * 2 + mocked_burger_full.ingredients[0].price
 
-        price = burger_full.get_price()
+        price = mocked_burger_full.get_price()
 
         assert price == manual_price
 
-    def test_get_receipt_correct_data_return_valid_receipt_lines_count(self, burger_full):
+    def test_get_receipt_correct_data_return_valid_receipt_lines_count(self, mocked_burger_full):
         """
         Проверяет, что метод get_receipt() возвращает чек с ожидаемым количеством строк
         """
-        receipt = burger_full.get_receipt()  # 2 булки, 2 ингридиента, 2 строки на price с отступом
+        receipt = mocked_burger_full.get_receipt()  # 2 булки, 1 ингридиент, 2 строки на price с отступом
 
-        assert len(receipt.split('\n')) == 6
+        assert len(receipt.split('\n')) == 5
