@@ -1,5 +1,3 @@
-from typing import List
-
 from praktikum.database import Database
 from praktikum.bun import Bun
 from praktikum.ingredient import Ingredient
@@ -22,7 +20,7 @@ class TestDatabase:
 
         buns = database.available_buns()
 
-        assert len(buns) > 0 and isinstance(buns, List) and type(buns[0]) == Bun
+        assert len(buns) > 0 and all(isinstance(bun, Bun) for bun in buns)
     
     def test_available_ingredients_correct_data_return_non_empty_list(self):
         """
@@ -32,7 +30,7 @@ class TestDatabase:
 
         ingredients = database.available_ingredients()
 
-        assert len(ingredients) > 0 and isinstance(ingredients, List) and type(ingredients[0]) == Ingredient
+        assert len(ingredients) > 0 and all(isinstance(ingredient, Ingredient) for ingredient in ingredients)
 
     def test_init_correct_data_lists_populated(self):
         """
